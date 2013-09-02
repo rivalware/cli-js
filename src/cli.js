@@ -33,10 +33,18 @@ var cli = {
 
     handle_key: function(key) {
 	var k = key.keyCode;
-	if (key.shiftKey) {
-	    key -= 48;
+	var ch;
+	if (k == 32) {
+	    ch = '&nbsp;'
 	}
-	cli.command_buffer += String.fromCharCode(k);
+	else if (key.shiftKey) {
+	    key -= 48;
+	    ch = String.fromCharCode(k);
+	}
+	else {
+	    ch = String.fromCharCode(k);
+	}
+	cli.command_buffer += ch;
 	cli.render();
     },
 
