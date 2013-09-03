@@ -6,7 +6,20 @@ var cli = {
     fg_color: '#FFFFFF',
     prompt_color: '#00FF00',
     cursor_color: '#FFFFFF',
-    command_buffer: 'help',
+    command_buffer: '',
+    output_buffer: '',
+
+    commands: {
+	commands: function(args) {
+	    cli.write_line('List of available commands');
+	    cli.write_line('==========================');
+
+	    for (var command in cli.commands) {
+		cli.write_line('>&nbsp;' + command);
+	    }
+	    cli.write_line('<br />');
+	}
+    },
     
     prompt: 'rivalware/home>&nbsp;',
 
@@ -30,6 +43,11 @@ var cli = {
 	this.render();
 	window.onkeypress = this.handle_character;
 	window.onkeydown = this.handle_modifier;
+    },
+
+    write_line: function(line) {
+	this.output_buffer += line;
+	this.output_buffer += '<br />'
     },
 
     handle_modifier: function(key) {
@@ -69,6 +87,9 @@ var cli = {
 	    this.screen.removeChild(this.screen.lastChild);
 	}
 	
+	var output = document.createElement('div');
+	output.innerHTML = this.output_buffer;
+
 	var input = document.createElement('div');
 	input.className = 'input';
 
@@ -88,6 +109,7 @@ var cli = {
 	cursor.on = true;
 	this.cursor = cursor;
 
+	input.appendChild(output);
 	input.appendChild(prompt);
 	input.appendChild(command);
 	input.appendChild(cursor);
@@ -110,6 +132,10 @@ var cli = {
     },
 
     process_command: function() {
+	var words = this.command_buffer.split(' ');
+	var command = words[0];
+	var args = words.slice(1, words.length);
+	this.commands[command](args);
 	this.command_buffer = "";
 	this.render();
     }
