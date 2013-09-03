@@ -28,16 +28,30 @@ var cli = {
 	this.screen.style['font-family'] = 'monospace';
 
 	this.render();
-	window.onkeypress = this.handle_key;
+	window.onkeypress = this.handle_character;
+	window.onkeydown = this.handle_modifier;
     },
 
-    handle_key: function(key) {
-	var k = key.keyCode;
+    handle_modifier: function(key) {
+	var k = key.which;
+	if (k === 8) {
+	    cli.command_buffer = cli.command_buffer.slice(0, -1);
+	    cli.render();
+	    return;
+	}
+    },
+
+    handle_character: function(key) {
+	var k = key.which;
 	var ch;
 	if (k == 32) {
 	    ch = '&nbsp;'
 	}
-	else if (key.shiftKey) {
+	if (k === 13) {
+	    cli.process_command();
+	    return;
+	}
+	else if (!key.shiftKey) {
 	    key -= 48;
 	    ch = String.fromCharCode(k);
 	}
@@ -93,5 +107,10 @@ var cli = {
 	}, 750);
 	
 	this.screen.appendChild(input);
+    },
+
+    process_command: function() {
+	this.command_buffer = "";
+	this.render();
     }
 };
