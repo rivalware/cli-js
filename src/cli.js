@@ -18,6 +18,9 @@ var cli = {
 		cli.write_line('>&nbsp;' + command);
 	    }
 	    cli.write_line('<br />');
+	},
+	clear: function(args) {
+	    cli.clear_buffer();
 	}
     },
     
@@ -48,6 +51,10 @@ var cli = {
     write_line: function(line) {
 	this.output_buffer += line;
 	this.output_buffer += '<br />'
+    },
+
+    clear_buffer: function() {
+	this.output_buffer = '';
     },
 
     handle_modifier: function(key) {
